@@ -9,8 +9,9 @@ Author URI: http://dominiquepierre.fr/
 License: GNULIGAN
 */
 
-add_action('init','liverpool_init');
-add_action('add_meta_boxes','liverpool_add_meta_box');
+add_action('init', 'liverpool_init');
+add_action('add_meta_boxes', 'liverpool_info_meta_box');
+add_action('add_meta_boxes', 'liverpool_img_meta_box'); // upload img
 
 add_action('save_post', 'liverpool_meta_box_save');
 
@@ -19,6 +20,7 @@ add_filter('manage_edit-player_columns', 'liverpool_manage_posts_columns');
 
 function liverpool_init ()
 {
+
   $labels = array(
     'name'              => 'Liverpool\'s Player',
     'add_new'           => 'Add a new player',
@@ -31,20 +33,23 @@ function liverpool_init ()
     'not_found'         => 'None player!',
     'not_found_in_trash' => 'None player in trash!',
     'parent_item_colon' => 'Player',
-    'menu_name'         => 'Liverpool\'s player',
+    'menu_name'         => 'Liverpool\'s player'
   );
 
-  register_post_type('player',array(
-    'public'              => true,
-    'publicly_queryable'  => false,
-    'labels'              => $labels,
-    'menu_position'       => 100,
-    'supports'            => array('thumbnail')
-  ));
+  register_post_type('player',
+    array(
+      'labels'              => $labels,
+      'public'              => true,
+      'publicly_queryable'  => false,
+      'menu_position'       => 100,
+      'supports'            => array('thumbnail')
+    )
+  );
+
 } // end liverpool_init();
 
-// adding meta box
-function liverpool_add_meta_box()
+// adding player's info meta box
+function liverpool_info_meta_box()
 {
   // $id, $title, $callback, $post_type, $context, $priority
   add_meta_box(
@@ -105,6 +110,60 @@ function liverpool_meta_box_cb($post)
 <?php
 } // liverpool meta box cb function end
 
+// meta box to upload picture
+function liverpool_img_meta_box() {
+
+  // $id, $title, $callback, $post_type, $context, $priority
+  add_meta_box(
+    'wp_custom_attachment',
+    'Picture',
+    'wp_img_attachment',
+    'player',
+    'advanced',
+    'high'
+  );
+
+} // end liverpool_img_meta_box
+
+function wp_img_attachment() {
+
+  //wp_nonce_field(plugin_basename(__FILE__), 'wp_custom_image_nonce');
+
+  $html = '<p class="description">';
+  $html .= 'Upload player\'s picture here.';
+  $html .= '</p>';
+  $html .= '<input type="file" id="wp_custom_image" name="wp_custom_image" value="" size="25">';
+
+  echo $html;
+
+} // end wp_img_attachment
+
+//function save_custom_meta_data($id) {
+
+  /* --- security verification --- */
+  //if(!wp_verify_nonce($_POST['wp_custom_attachment_nonce'], plugin_basename(__FILE__))) {
+    //return $id;
+  //} // end if
+
+  //if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+    //return $id;
+  //} // end if
+
+  //if('page' == $_POST['post_type']) {
+    //if(!current_user_can('edit_page', $id)) {
+      //return $id;
+    //} // end if
+  //} else {
+    //if(!current_user_can('edit_page', $id)) {
+      //return $id;
+    //} // end if
+  //} // end if
+  /* - end security verification - */
+
+//} // end save_custom_meta_data
+//add_action('save_post', 'save_custom_meta_data');
+
+
 // save edit or new player
 function liverpool_meta_box_save( $post_id )
 {
@@ -119,18 +178,54 @@ function liverpool_meta_box_save( $post_id )
   if( !current_user_can( 'edit_post' ) )
     return;
 
+  var_dump($_POST);
+
   if( isset( $_POST['meta_box_firstname'] ) )
-    update_post_meta( $post_id, 'meta_box_firstname', wp_kses( $_POST['meta_box_firstname']) );
+    update_post_meta( $post_id, 'meta_box_firstname', wp_kses_post( $_POST['meta_box_firstname']) );
 
   if( isset( $_POST['meta_box_lastname'] ) )
-    update_post_meta( $post_id, 'meta_box_lastname', wp_kses( $_POST['meta_box_lastname']) );
+    update_post_meta( $post_id, 'meta_box_lastname', wp_kses_post( $_POST['meta_box_lastname']) );
 
   if( isset( $_POST['meta_box_position'] ) )
     update_post_meta( $post_id, 'meta_box_position', esc_attr( $_POST['meta_box_position'] ) );
 
   if( isset( $_POST['meta_box_number'] ) )
     update_post_meta( $post_id, 'meta_box_number', esc_attr( $_POST['meta_box_number'] ) );
-}
+
+var_dump($_FILES);
+
+  // Make sure the file array isn't empty
+  if(!empty($_FILES['wp_custom_attachment']['name'])) {
+
+    // Setup the array of supported file types. In this case, it's just PDF.
+    $supported_types = array('image/png','image/jpeg');
+
+    // Get the file type of the upload
+    $arr_file_type = wp_check_filetype(basename($_FILES['wp_custom_attachment']['name']));
+    $uploaded_type = $arr_file_type['type'];
+
+    // Check if the type is supported. If not, throw an error.
+    if(in_array($uploaded_type, $supported_types)) {
+
+      // Use the WordPress API to upload the file
+      $upload = wp_upload_bits($_FILES['wp_custom_attachment']['name'], null, file_get_contents($_FILES['wp_custom_attachment']['tmp_name']));
+
+      if(isset($upload['error']) && $upload['error'] != 0) {
+        wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
+      } else {
+        add_post_meta($post_id, 'wp_custom_attachment', $upload);
+        update_post_meta($post_id, 'wp_custom_attachment', $upload);
+      } // end if/else
+
+    } else {
+      wp_die("The file type that you've uploaded is not a PDF.");
+    } // end if/else
+
+  } // end if
+  else
+    echo 'FAIL NOOB';exit;
+
+} // end save
 
 // frontend table display
 function liverpool_show($limit = 5)
@@ -186,6 +281,7 @@ function liverpool_manage_posts_columns($columns)
       'lastname'        => __('Last name'),
       'team'            => __('Position'),
       'number'          => __('Number'),
+      'edit'            => __('Edit')
     ));
   return $columns;
 }
@@ -204,6 +300,9 @@ function liverpool_manage_posts_custom_column($column, $post_id)
       break;
     case 'number':
        $liverpool_player = get_post_meta($post_id, 'meta_box_number', true);
+       break;
+    case 'edit':
+       $liverpool_player = "<a href='post.php?post={$post_id}&action=edit'>Edit</a>";
        break;
   }
 

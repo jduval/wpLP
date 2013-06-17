@@ -179,7 +179,8 @@ function portfolio_manage_posts_columns($columns)
                                       'screenshot'            => __('Screenshots'),
                                       'servicetype'          => __('Service type'),
                                       'technicalenvironment' => __('Technical environment'),
-                                      'projectduration'      => __('Project duration')
+                                      'projectduration'      => __('Project duration'),
+                                      'edit'                 => __('Edit')
                                     ));
   return $columns;
 }
@@ -188,27 +189,30 @@ function portfolio_manage_posts_custom_column($column, $post_id)
 {
     switch ($column) {
         case 'projectname':
-            $portfolio = get_post_meta($post_id, 'meta_box_projectname', true);
-            break;
+          $portfolio = get_post_meta($post_id, 'meta_box_projectname', true);
+          break;
         case 'clientname':
-            $portfolio = get_post_meta($post_id, 'meta_box_clientname', true);
-            break;
+          $portfolio = get_post_meta($post_id, 'meta_box_clientname', true);
+          break;
         case 'url':
-            $portfolio = get_post_meta($post_id, 'meta_box_url', true);
-            break;
+          $portfolio = "<a href='" . get_post_meta($post_id, 'meta_box_url', true) . "'>" . get_post_meta($post_id, 'meta_box_url', true) . "</a>";
+          break;
         case 'screenshot':
-            if (has_post_thumbnail())
-                $portfolio = get_the_post_thumbnail($post_id,'thumbnail');
-            break;
+          if (has_post_thumbnail())
+            $portfolio = get_the_post_thumbnail($post_id,'thumbnail');
+          break;
         case 'servicetype':
-             $portfolio = get_post_meta($post_id, 'meta_box_servicetype', true);
-             break;
+           $portfolio = get_post_meta($post_id, 'meta_box_servicetype', true);
+           break;
         case 'technicalenvironment':
-             $portfolio = get_post_meta($post_id, 'meta_box_technicalenvironment', true);
-             break;
+           $portfolio = get_post_meta($post_id, 'meta_box_technicalenvironment', true);
+           break;
         case 'projectduration':
-             $portfolio = get_post_meta($post_id, 'meta_box_projectduration', true);
-             break;
+          $portfolio = get_post_meta($post_id, 'meta_box_projectduration', true);
+          break;
+        case 'edit':
+          $liverpool_player = "<a href='post.php?post={$post_id}&action=edit'>Edit</a>";
+          break;
     }
 
     echo $portfolio;
