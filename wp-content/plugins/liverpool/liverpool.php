@@ -67,8 +67,7 @@ function liverpool_meta_box_cb($post)
   $lastname   = isset( $values['meta_box_lastname'] ) ? $values['meta_box_lastname'][0] : null;
   $position   = isset( $values['meta_box_position'] ) ? $values['meta_box_position'][0] : null;
   $number     = isset( $values['meta_box_number'] ) ? $values['meta_box_number'][0] : null;
-  //$image      = isset( $values['wp_custom_image'] ) ? $values['wp_custom_image']['url'] : null;
-  //var_dump($values['wp_custom_image']);
+
   $img = get_post_meta($post->ID, 'wp_custom_image', true);
   $image = isset ( $img ) ? '<a href="' . $img['url'] . '" target="_blank">' . $img['url'] . '</a>' : null;
 
