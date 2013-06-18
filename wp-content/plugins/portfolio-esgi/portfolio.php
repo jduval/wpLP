@@ -320,7 +320,6 @@ function portfolio_meta_box_save( $post_id )
   // Make sure the file array isn't empty
   if(!empty($_FILES['wp_custom_sc']['name'])) {
 
-    // Setup the array of supported file types. In this case, it's just PDF.
     $supported_types = array('image/png','image/jpeg');
 
     // Get the file type of the upload
