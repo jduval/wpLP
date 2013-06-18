@@ -67,7 +67,10 @@ function liverpool_meta_box_cb($post)
   $lastname   = isset( $values['meta_box_lastname'] ) ? $values['meta_box_lastname'][0] : null;
   $position   = isset( $values['meta_box_position'] ) ? $values['meta_box_position'][0] : null;
   $number     = isset( $values['meta_box_number'] ) ? $values['meta_box_number'][0] : null;
-  $image      = isset( $values['wp_custom_image'] ) ? $values['wp_custom_image']['url'] : null;
+  //$image      = isset( $values['wp_custom_image'] ) ? $values['wp_custom_image']['url'] : null;
+  //var_dump($values['wp_custom_image']);
+  $img = get_post_meta($post->ID, 'wp_custom_image', true);
+  $image = isset ( $img ) ? '<a href="' . $img['url'] . '" target="_blank">' . $img['url'] . '</a>' : null;
 
   //The nonce field is used to validate that the contents of the form request came from the current site and not somewhere else.
   wp_nonce_field( 'my_meta_box_nonce', 'meta_box_nonce' );

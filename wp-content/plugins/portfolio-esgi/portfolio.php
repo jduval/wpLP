@@ -236,7 +236,7 @@ function portfolio_manage_posts_columns($columns)
       'technicalenvironment' => __('Technical environment'),
       'projectduration'      => __('Project duration'),
       'screenshot'           => __('Screenshots'),
-      'edit'                 => __('Edit')
+      'alter'                 => __('Edit')
     ));
 
   return $columns;
@@ -274,8 +274,8 @@ function portfolio_manage_posts_custom_column($column, $post_id)
       }
       $portfolio .= "</ul>";
       break;
-    case 'edit':
-      $liverpool_player = "<a href='post.php?post={$post_id}&action=edit'>Edit</a>";
+    case 'alter':
+      $portfolio = "<a href='post.php?post={$post_id}&action=edit'>Edit</a>";
       break;
   }
 
