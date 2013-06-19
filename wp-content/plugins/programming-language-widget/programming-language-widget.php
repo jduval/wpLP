@@ -118,14 +118,15 @@ class Proglang extends WP_widget
 
   ?>
 
-   <div id='top-proglang'>
-     <table class='table-collectionteam'>
-       <thead>
-         <tr>
-           <th><strong>Highlight of programming languages</strong></th>
-           <th></th>
-         </tr>
-       </thead>
+  <div id='top-proglang'>
+    <table class='table-collectionteam'>
+      <thead>
+        <tr>
+          <th><strong>Highlight of programming languages</strong></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
 
   <?php
 
@@ -142,6 +143,7 @@ class Proglang extends WP_widget
 
   ?>
 
+      </tbody>
     </table>
   </div>
 
