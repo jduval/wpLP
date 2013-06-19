@@ -86,10 +86,10 @@ function liverpool_meta_box_cb($post)
         <p>
             <label for="meta_box_position">Position</label>
             <select name="meta_box_position" id="meta_box_position">
-              <option value="Attack" <?php selected( $position, 'Attacker' ); ?>>Attacker</option>
-              <option value="Defend" <?php selected( $position, 'Defender' ); ?>>Defender</option>
+              <option value="Attack" <?php selected( $position, 'Attack' ); ?>>Attacker</option>
+              <option value="Defend" <?php selected( $position, 'Defend' ); ?>>Defender</option>
               <option value="Midfield" <?php selected( $position, 'Midfield' ); ?>>Midfield</option>
-              <option value="Goalkeep" <?php selected( $position, 'Goalkeeper' ); ?>>Goalkeeper</option>
+              <option value="Goalkeep" <?php selected( $position, 'Goalkeep' ); ?>>Goalkeeper</option>
             </select>
         </p>
         <p>
