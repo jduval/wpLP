@@ -59,7 +59,7 @@ function proglang_info_meta_box()
 }
 add_action('add_meta_boxes', 'proglang_info_meta_box');
 
-// display of meta box with values
+// display of meta box with values in backend when editing post
 function proglang_meta_box_cb($post)
 {
   // $post is already set, and contains an object: the WordPress post
@@ -75,7 +75,10 @@ function proglang_meta_box_cb($post)
   $difficulty = isset( $values['meta_box_difficulty'] ) ? $values['meta_box_difficulty'][0] : null;
 
   $img = get_post_meta($post->ID, 'wp_custom_logo', true);
-  $image = isset ( $img ) ? '<a href="' . $img['url'] . '" target="_blank">' . $img['url'] . '</a>' : null;
+
+  if ( isset ( $img ) && $img ) {
+    $image = '<a href="' . $img['url'] . '" target="_blank">' . $img['url'] . '</a>';
+  }
 
   //The nonce field is used to validate that the contents of the form request came from the current site and not somewhere else.
   wp_nonce_field( 'my_meta_box_nonce', 'meta_box_nonce' );
@@ -87,7 +90,7 @@ function proglang_meta_box_cb($post)
       </p>
       <p>
         <label for="meta_box_desc">Description</label>
-        <textarea name="meta_box_desc" id="meta_box_desc" value="<?php echo $desc; ?>"></textarea>
+        <textarea name="meta_box_desc" id="meta_box_desc" value="<?php echo $desc; ?>"><?php echo $desc; ?></textarea>
       </p>
       <p>
         <label for="meta_box_color">Color</label>
@@ -106,8 +109,8 @@ function proglang_meta_box_cb($post)
         </p>
         <p>
           <label for="meta_box_difficulty">Difficulty</label>
-          <input type="radio" name="meta_box_difficulty" value="easy">Easy
-          <input type="radio" name="meta_box_difficulty" value="hard">Hard
+          <input type="radio" name="meta_box_difficulty" value="easy" <?php checked( $difficulty, 'easy' ); ?>>Easy
+          <input type="radio" name="meta_box_difficulty" value="hard" <?php checked( $difficulty, 'hard' ); ?>>Hard
         </p>
         <p>
           <p>Current picture : <?php echo isset ( $image ) ? $image : 'None' ; ?></p>
@@ -175,6 +178,9 @@ function proglang_meta_box_save( $post_id )
   if( isset( $_POST['meta_box_desc'] ) )
     update_post_meta( $post_id, 'meta_box_desc', wp_kses_post( $_POST['meta_box_desc']) );
 
+  if( isset( $_POST['meta_box_color'] ) )
+    update_post_meta( $post_id, 'meta_box_color', wp_kses_post( $_POST['meta_box_color']) );
+
   if( isset( $_POST['meta_box_type'] ) )
     update_post_meta( $post_id, 'meta_box_type', esc_attr( $_POST['meta_box_type'] ) );
 
@@ -185,25 +191,24 @@ function proglang_meta_box_save( $post_id )
     update_post_meta( $post_id, 'meta_box_difficulty', esc_attr( $_POST['meta_box_difficulty'] ) );
 
   // Make sure the file array isn't empty
-  if(!empty($_FILES['wp_custom_image']['name'])) {
+  if(!empty($_FILES['wp_custom_logo']['name'])) {
 
-    // Setup the array of supported file types. In this case, it's just PDF.
     $supported_types = array('image/png','image/jpeg');
 
     // Get the file type of the upload
-    $arr_file_type = wp_check_filetype(basename($_FILES['wp_custom_image']['name']));
+    $arr_file_type = wp_check_filetype(basename($_FILES['wp_custom_logo']['name']));
     $uploaded_type = $arr_file_type['type'];
 
     // Check if the type is supported. If not, throw an error.
     if(in_array($uploaded_type, $supported_types)) {
 
       // Use the WordPress API to upload the file
-      $upload = wp_upload_bits($_FILES['wp_custom_image']['name'], null, file_get_contents($_FILES['wp_custom_image']['tmp_name']));
+      $upload = wp_upload_bits($_FILES['wp_custom_logo']['name'], null, file_get_contents($_FILES['wp_custom_logo']['tmp_name']));
 
       if(isset($upload['error']) && $upload['error'] != 0) {
         wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
       } else {
-        update_post_meta($post_id, 'wp_custom_image', $upload);
+        update_post_meta($post_id, 'wp_custom_logo', $upload);
       } // end if/else
 
     } else {
@@ -240,14 +245,17 @@ function proglang_show($limit = 5)
         if ( $proglangs->have_posts() ) :
           while ( $proglangs->have_posts() ) : $proglangs->the_post();
             global $post;
+
             $image = get_post_meta($post->ID,'wp_custom_logo', true);
             if ( ! ( isset ( $image ) && $image ) )
               $image['url'] = null;
+
+            $color = get_post_meta($post->ID, 'meta_box_color', true);
             echo ("
               <tr>
                 <td>" . get_post_meta($post->ID, 'meta_box_name', true) . "</td>
                 <td>" . get_post_meta($post->ID, 'meta_box_desc', true) . "</td>
-                <td>" . get_post_meta($post->ID, 'meta_box_color', true) . "</td>
+                <td><span style='width:20px;height:20px;background-color:{$color};display:block;' title='{$color}'></span></td>
                 <td>" . get_post_meta($post->ID, 'meta_box_type', true) . "</td>
                 <td>" . get_post_meta($post->ID, 'meta_box_date', true) . "</td>
                 <td>" . get_post_meta($post->ID, 'meta_box_difficulty', true) . "</td>
@@ -278,7 +286,7 @@ function proglang_manage_posts_columns($columns)
       'desc'       => __('Description'),
       'color'      => __('Color'),
       'type'       => __('Type'),
-      'date'       => __('Creation date'),
+      'crea_date'  => __('Creation date'),
       'difficulty' => __('Difficulty'),
       'logo'       => __('Logo'),
       'modify'     => __('Edit')
@@ -298,12 +306,13 @@ function proglang_manage_posts_custom_column($column, $post_id)
       $proglang = get_post_meta($post_id, 'meta_box_desc', true);
       break;
     case 'color':
-      $proglang = get_post_meta($post_id, 'meta_box_color', true);
+      $color = get_post_meta($post_id, 'meta_box_color', true);
+      $proglang = "<span style='width:20px;height:20px;background-color:{$color};display:block;' title='{$color}'></span>";
       break;
     case 'type':
       $proglang = get_post_meta($post_id, 'meta_box_type', true);
       break;
-    case 'date':
+    case 'crea_date':
       $proglang = get_post_meta($post_id, 'meta_box_date', true);
       break;
     case 'difficulty':
