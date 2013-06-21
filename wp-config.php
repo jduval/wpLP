@@ -19,10 +19,10 @@
 define('DB_NAME', 'wpLP');
 
 /** MySQL database username */
-define('DB_USER', 'wpLP');
+define('DB_USER', 'root');
 
 /** MySQL database password */
-define('DB_PASSWORD', 'password');
+define('DB_PASSWORD', '');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -80,6 +80,10 @@ define('WPLANG', '');
  */
 define('WP_DEBUG', false);
 
+/** moving wp-content folder **/
+define ( 'WP_CONTENT_DIR', $_SERVER['DOCUMENT_ROOT'] . '/wpLP/dossier-cache/content' );
+define ( 'WP_CONTENT_URL', 'http://192.168.1.76/wpLP/dossier-cache/content' );
+
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */
@@ -88,4 +92,3 @@ if ( !defined('ABSPATH') )
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-
