@@ -68,9 +68,6 @@ function liverpool_meta_box_cb($post)
   $position   = isset( $values['meta_box_position'] ) ? $values['meta_box_position'][0] : null;
   $number     = isset( $values['meta_box_number'] ) ? $values['meta_box_number'][0] : null;
 
-  $img = get_post_meta($post->ID, 'wp_custom_image', true);
-  $image = isset ( $img ) ? '<a href="' . $img['url'] . '" target="_blank">' . $img['url'] . '</a>' : null;
-
   //The nonce field is used to validate that the contents of the form request came from the current site and not somewhere else.
   wp_nonce_field( 'my_meta_box_nonce', 'meta_box_nonce' );
 
@@ -104,7 +101,18 @@ function liverpool_meta_box_cb($post)
             </select>
         </p>
         <p>
-          <p>Current picture : <?php echo isset ( $image ) ? $image : 'None' ; ?></p>
+          <?php
+
+            $images = get_post_meta($post->ID, 'wp_custom_image');
+            if ( isset ( $images ) && $images ) {
+              foreach ( $images as $img ) {
+                echo '<p>Current picture : <a href="' . $img['url'] . '" target="_blank">' . $img['url']. '</a></p>';
+              }
+            } else {
+              echo "<p>Current picture : None</p>";
+            }
+
+          ?>
         </p>
 
 <?php
