@@ -20,7 +20,7 @@ if (($ac_maker_active == true) OR (isset($ac_dir))) {
 
 if (isset($ac_dir)) { // requested from wp backend
   $in_wp = true;
-  $ac_dir_img = '/wpLP/dossier-cache/content/plugins/animal-captcha/source/animal/';
+  $ac_dir_img = '/workspace/wpLP/dossier-cache/content/plugins/animal-captcha/source/animal/';
 } else { // direct request
   $in_wp = false;
   $ac_dir = 'animal/';
@@ -116,9 +116,9 @@ IMG URL: <input type="text" size="100" name="animal_url" value="http://" /> (onl
 
         echo '
 
-<link href="'.($in_wp?'/wpLP/dossier-cache/content/plugins/animal-captcha/source/lib':'lib').'/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
+<link href="'.($in_wp?'/workspace/wpLP/dossier-cache/content/plugins/animal-captcha/source/lib':'lib').'/jquery.Jcrop.css" rel="stylesheet" type="text/css" />
 <script src="'.($in_wp?'/wpLp/dossier-cache/content/plugins/animal-captcha/source/lib':'lib').'/jquery.min.js"></script>
-<script src="'.($in_wp?'/wpLP/dossier-cache/content/plugins/animal-captcha/source/lib':'lib').'/jquery.Jcrop.js"></script>
+<script src="'.($in_wp?'/workspace/wpLP/dossier-cache/content/plugins/animal-captcha/source/lib':'lib').'/jquery.Jcrop.js"></script>
 <script language="Javascript">
 
 $(function(){

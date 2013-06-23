@@ -40,7 +40,7 @@ function ac_print_form_captcha() {
     }
     echo '<div id="animal-captcha-form">
 <label>'.$question.'<br /><input id="focusanimal" type="text" value="'.$animals_try.'" onclick="this.value=\'\';" name="animal-captcha" autocomplete="off" style="width:234px;margin:0 0 5px 0;" /></label><br />
-<img src="/wpLP/dossier-cache/content/plugins/animal-captcha/source/animal-captcha.php" border="0" height="120" id="animal-captcha-img" onclick="this.src=\'/wpLP/dossier-cache/content/plugins/animal-captcha/source/animal-captcha.php?\'+Math.random();" style="cursor:pointer;" /><br />
+<img src="/workspace/wpLP/dossier-cache/content/plugins/animal-captcha/source/animal-captcha.php" border="0" height="120" id="animal-captcha-img" onclick="this.src=\'/workspace/wpLP/dossier-cache/content/plugins/animal-captcha/source/animal-captcha.php?\'+Math.random();" style="cursor:pointer;" /><br />
 </div>';
   }
 }

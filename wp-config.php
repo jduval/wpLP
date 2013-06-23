@@ -19,10 +19,10 @@
 define('DB_NAME', 'wpLP');
 
 /** MySQL database username */
-define('DB_USER', 'root');
+define('DB_USER', 'wpLP');
 
 /** MySQL database password */
-define('DB_PASSWORD', '');
+define('DB_PASSWORD', 'password');
 
 /** MySQL hostname */
 define('DB_HOST', 'localhost');
@@ -81,8 +81,8 @@ define('WPLANG', '');
 define('WP_DEBUG', false);
 
 /** moving wp-content folder **/
-define ( 'WP_CONTENT_DIR', $_SERVER['DOCUMENT_ROOT'] . '/wpLP/dossier-cache/content' );
-define ( 'WP_CONTENT_URL', 'http://192.168.1.76/wpLP/dossier-cache/content' );
+define ( 'WP_CONTENT_DIR', $_SERVER['DOCUMENT_ROOT'] . '/workspace/wpLP/dossier-cache/content' );
+define ( 'WP_CONTENT_URL', 'http://localhost/workspace/wpLP/dossier-cache/content' );
 
 /* That's all, stop editing! Happy blogging. */
 
