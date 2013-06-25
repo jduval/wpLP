@@ -1,11 +1,26 @@
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteCond %{QUERY_STRING} !^admin
-RewriteRule ^admin/(.*) wp-admin/$1?%{QUERY_STRING} [L]
+#<IfModule mod_rewrite.c>
+#RewriteEngine On
+#RewriteCond %{QUERY_STRING} !^admin/
+#RewriteRule ^admin/(.*) wp-admin/$1?%{QUERY_STRING} [L]
 # enable rewrite url -> a2enmod rewrite. Check if it works else
 # add to /etc/apache2/apache2.conf
 # <IfModule mod_rewrite.c>
 # RewriteEngine On
 # </IfModule>
 # and chmod 644 .htaccess
+#</IfModule>
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RedirectPermanent /admin /admin/
+RewriteBase /workspace/wpLP/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{QUERY_STRING} !^admin/
+RewriteRule ^admin/(.*) wp-admin/$1?%{QUERY_STRING} [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /workspace/wpLP/index.php [L]
 </IfModule>
+
+# END WordPress
