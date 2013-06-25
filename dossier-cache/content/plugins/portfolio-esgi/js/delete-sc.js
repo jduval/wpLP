@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
     var $_this = $j(this),
         url = $_this.attr('data-url');
 
-    $j.post('../wp-content/plugins/portfolio-esgi/delete-sc.php', {url : url}, function(data) {
+    $j.post('../dossier-cache/content/plugins/portfolio-esgi/delete-sc.php', {url : url}, function(data) {
       $_this.parent().hide('slow');
     });
 

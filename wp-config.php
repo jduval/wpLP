@@ -16,6 +16,8 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
+define('WP_CACHE', true); //Added by WP-Cache Manager
+define( 'WPCACHEHOME', '/home/nims/workspace/wpLP/dossier-cache/content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
 define('DB_NAME', 'wpLP');
 
 /** MySQL database username */
@@ -79,10 +81,14 @@ define('WPLANG', '');
  * in their development environments.
  */
 define('WP_DEBUG', false);
+//define('WP_DEBUG', true);
 
 /** moving wp-content folder **/
 define ( 'WP_CONTENT_DIR', $_SERVER['DOCUMENT_ROOT'] . '/workspace/wpLP/dossier-cache/content' );
 define ( 'WP_CONTENT_URL', 'http://localhost/workspace/wpLP/dossier-cache/content' );
+
+define('WP_ADMIN_DIR', 'admin');
+define( 'ADMIN_COOKIE_PATH', SITECOOKIEPATH . WP_ADMIN_DIR);
 
 /* That's all, stop editing! Happy blogging. */
 

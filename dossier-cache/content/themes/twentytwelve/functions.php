@@ -448,3 +448,17 @@ function twentytwelve_customize_preview_js() {
 	wp_enqueue_script( 'twentytwelve-customizer', get_template_directory_uri() . '/js/theme-customizer.js', array( 'customize-preview' ), '20120827', true );
 }
 add_action( 'customize_preview_init', 'twentytwelve_customize_preview_js' );
+
+function wpadmin_filter( $url, $path, $orig_scheme ) {
+  $old  = array( "/(wp-admin)/");
+  $admin_dir = WP_ADMIN_DIR;
+  $new  = array($admin_dir);
+  return preg_replace( $old, $new, $url, 1);
+}
+add_filter('http://localhost/wpLP/', 'wpadmin_filter', 10, 3);
+
+//allow redirection, even if my theme starts to send output to the browser
+add_action('init', 'do_output_buffer');
+function do_output_buffer() {
+  ob_start();
+}

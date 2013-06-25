@@ -4,7 +4,7 @@ Plugin Name: Programming Language CRUD - Widget
 Plugin URI: http://plugin.geek.com
 Description: CRUD of Programming Languages - Widget.
 Version: 1.0
-Author: Mohamed Bena
+Author: Mohamed Benaida
 Author URI: http://momz.fr/
 License: GEEKNU
 */
